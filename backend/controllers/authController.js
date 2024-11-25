@@ -30,7 +30,12 @@ exports.login = async (req, res) => {
         }
 
         // Create JWT payload
-        const payload = { userId: user.id };
+        const payload = {
+            _id: user._id,  // example user object
+            email: user.email,
+            shopName: user.shopName,
+            // Add other fields as needed
+          };          
         console.log(payload);
         // Generate JWT token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -55,7 +60,12 @@ exports.register = async (req, res) => {
         user = new User({email, password, mobile, ownerName, shopName, shopLocation, shopCategory });
         await user.save();
 
-        const payload = { userId: user.id };
+        const payload = {
+            _id: user._id,  // example user object
+            email: user.email,
+            shopName: user.shopName,
+            // Add other fields as needed
+          };          
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(201).json({ token });
     } catch (err) {
