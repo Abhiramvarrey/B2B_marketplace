@@ -151,7 +151,7 @@ const Login = ({ onLogin }) => {  // Accept onLogin prop from parent
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{' '}
-          <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+          <a href="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Register now
           </a>
         </p>

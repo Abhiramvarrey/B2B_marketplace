@@ -9,6 +9,9 @@ const UserSchema = new mongoose.Schema({
     shopName: { type: String, required: true },
     shopLocation: { type: String, required: true },
     shopCategory: { type: String, required: true },
+    connected: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    pending: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    requested: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 UserSchema.pre('save', async function (next) {

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import { AppProvider } from '@toolpad/core/AppProvider';
 import { createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -15,17 +19,41 @@ import {
   Notifications as NotificationsIcon,
   Logout as LogoutIcon,
 } from '@mui/icons-material';
-import { AppProvider } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
+import PendingActionsRoundedIcon from '@mui/icons-material/PendingActionsRounded';
+import { DashboardLayout,ThemeSwitcher } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
 import Logout from './Logout'; // Import your Logout component
-
+import PostForm from '../Posts/Postsystem';
+import ShopSearch from '../Connect/connectShop';
+import { authService } from '../utils/authService'; // Import your authService
+import Requirements from '../Requiremnts/requirements';
+import logo from '../assets/logo.png';
+import Profile from '../pages/updateprofile';
+import PostDashboard from '../pages/getallPosts';
+import Connections from '../Connect/connectList';
 // Create a custom theme for the dashboard
 const demoTheme = createTheme({
   cssVariables: {
     colorSchemeSelector: 'data-toolpad-color-scheme',
   },
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: {
+    light: {
+      palette: {
+        background: {
+          default: '#f7f6f6',
+          paper: '##fefdfc',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        background: {
+          default: '#000000',
+          paper: '#112E4D',
+        },
+      },
+    },
+  },
   breakpoints: {
     values: {
       xs: 0,
@@ -41,8 +69,7 @@ const demoTheme = createTheme({
 function RequirementsContent() {
   return (
     <Box sx={{ py: 4, textAlign: 'center' }}>
-      <Typography variant="h4">Requirements</Typography>
-      <Typography>List and manage your requirements here.</Typography>
+      <Requirements/>
     </Box>
   );
 }
@@ -50,8 +77,7 @@ function RequirementsContent() {
 function PostContent() {
   return (
     <Box sx={{ py: 4, textAlign: 'center' }}>
-      <Typography variant="h4">Post</Typography>
-      <Typography>Create and share new posts here.</Typography>
+      <PostForm />
     </Box>
   );
 }
@@ -60,6 +86,7 @@ function MyPostsContent() {
   return (
     <Box sx={{ py: 4, textAlign: 'center' }}>
       <Typography variant="h4">My Posts</Typography>
+      <PostDashboard />
       <Typography>View and manage your posts here.</Typography>
     </Box>
   );
@@ -68,8 +95,7 @@ function MyPostsContent() {
 function ConnectToShopsContent() {
   return (
     <Box sx={{ py: 4, textAlign: 'center' }}>
-      <Typography variant="h4">Connect to Shops</Typography>
-      <Typography>Find and connect with shops here.</Typography>
+      <ShopSearch />
     </Box>
   );
 }
@@ -78,7 +104,6 @@ function MyConnectionsContent() {
   return (
     <Box sx={{ py: 4, textAlign: 'center' }}>
       <Typography variant="h4">My Connections</Typography>
-      <Typography>View and manage your connections here.</Typography>
     </Box>
   );
 }
@@ -95,8 +120,7 @@ function SubscriptionContent() {
 function UpdateProfileContent() {
   return (
     <Box sx={{ py: 4, textAlign: 'center' }}>
-      <Typography variant="h4">Update Profile</Typography>
-      <Typography>Update your profile details here.</Typography>
+      <Profile />
     </Box>
   );
 }
@@ -110,12 +134,22 @@ function NotificationsContent() {
   );
 }
 
+function RequestPage() {
+  return (
+    <Box sx={{ py: 4, textAlign: 'center' }}>
+      <Connections />
+      <Typography>View and manage your requests here.</Typography>
+    </Box>
+  );
+}
+
 // Content renderer based on the current route
 function DemoPageContent({ pathname }) {
   const handleLogout = () => {
     // Clear the token and update the state
     localStorage.removeItem('token');
   };
+
   switch (pathname) {
     case '/requirements':
       return <RequirementsContent />;
@@ -134,7 +168,9 @@ function DemoPageContent({ pathname }) {
     case '/notifications':
       return <NotificationsContent />;
     case '/logout':
-      return <Logout onLogout={handleLogout}/>;
+      return <Logout onLogout={handleLogout} />;
+    case '/my-requests':
+      return <RequestPage />;
     default:
       return (
         <Box sx={{ py: 4, textAlign: 'center' }}>
@@ -148,13 +184,54 @@ function DemoPageContent({ pathname }) {
 DemoPageContent.propTypes = {
   pathname: PropTypes.string.isRequired,
 };
+function ToolbarActionsSearch() {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Clear the token and update the state
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
+  return (
+    <Stack direction="row" spacing={2} alignItems="center">
+      <ThemeSwitcher />
+      <Tooltip title="Logout">
+        <IconButton onClick={handleLogout}>
+          <LogoutIcon />
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+}
+function SidebarFooter({ mini }) {
+  return (
+    <Typography
+      variant="caption"
+      sx={{ m: 1, whiteSpace: 'nowrap', overflow: 'hidden' }}
+    >
+      {mini ? '© ABG' : `© ${new Date().getFullYear()} Made with love by Aushadhbridge`}
+    </Typography>
+  );
+}
+
+SidebarFooter.propTypes = {
+  mini: PropTypes.bool.isRequired,
+};
 
 // Navigation and routing
 function DashboardLayoutNavigationLinks(props) {
   const { window } = props;
   const router = useDemoRouter('/update-profile'); // Initially set to Update Profile
+  const navigate = useNavigate(); // Hook to navigate
 
-  // Optional: Define a custom window for iframe support
+
+  // Check if the token is expired and redirect to login if it is
+  useEffect(() => {
+    if (authService.isTokenExpired()) {
+      navigate('/login'); // Redirect to login page
+    }
+  }, [navigate]);
+
   const demoWindow = window !== undefined ? window() : undefined;
 
   return (
@@ -164,6 +241,7 @@ function DashboardLayoutNavigationLinks(props) {
         { segment: 'post', title: 'Post', icon: <PostAddIcon /> },
         { segment: 'myposts', title: 'My Posts', icon: <ForumIcon /> },
         { segment: 'connect-to-shops', title: 'Connect to Shops', icon: <ShopIcon /> },
+        { segment: 'my-requests', title: 'Requests', icon: <PendingActionsRoundedIcon /> },
         { segment: 'my-connections', title: 'My Connections', icon: <GroupIcon /> },
         { segment: 'subscription', title: 'Subscription', icon: <SubscriptionsIcon /> },
         { segment: 'update-profile', title: 'Update Profile', icon: <PersonIcon /> },
@@ -173,8 +251,18 @@ function DashboardLayoutNavigationLinks(props) {
       router={router}
       theme={demoTheme}
       window={demoWindow}
+      branding={{
+        logo: <img src = {logo} alt="medimarket logo" />,
+        title: 'AUSHADH-BRIDGE',
+      }}
     >
-      <DashboardLayout>
+      
+      <DashboardLayout
+      slots={{
+        toolbarActions: ToolbarActionsSearch,
+        sidebarFooter: SidebarFooter,
+      }}
+      >
         <DemoPageContent pathname={router.pathname} />
       </DashboardLayout>
     </AppProvider>
@@ -182,10 +270,6 @@ function DashboardLayoutNavigationLinks(props) {
 }
 
 DashboardLayoutNavigationLinks.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
   window: PropTypes.func,
 };
 
