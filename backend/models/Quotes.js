@@ -14,9 +14,5 @@ const QuoteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// QuoteSchema.pre('save', function (next) {
-//   this.total = this.item.quantity * this.item.price;
-//   next();
-// });
 
 module.exports = mongoose.model('Quote', QuoteSchema);

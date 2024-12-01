@@ -5,7 +5,7 @@ const createQuote = async (req, res) => {
   try {
     const { receiver, item ,total } = req.body;
     const sender = user.req._id;
-    console.log(sender);
+    
     if (!sender || !receiver || !item.name || !item.quantity || !item.price) {
       return res.status(400).json({ message: 'All fields are required' });
     }
@@ -42,5 +42,31 @@ const discardQuote = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getsentquotes = async (req,res) => {
+  try{
+    const myquotes = await Quote.find({sender: req.user._id}).populate("sender", "items receiver total")
+    if(!myquotes) {
+      res.status(404).json({mesage: 'no Quotes send'})
+    }
+    res.status(200).json(myquotes)
+  }
+  catch(errror){
+    res.status(500).json({ error: error.message })
+  }
+}
 
-module.exports = { createQuote, discardQuote };
+const getreceivedQuotes = async (req,res) =>{
+  try{
+    const receivedquotes = await Quote.find({receiver: req.user._id})
+
+    if(!receivedquotes){
+      res.status(404).json({message: 'no quotes received'})
+    }
+
+    res.status(200).json(receivedquotes)
+  }
+  catch(error){
+    res.status(500).json({error: error.message })
+  }
+}
+module.exports = { createQuote, discardQuote,getsentquotes, getreceivedQuotes };

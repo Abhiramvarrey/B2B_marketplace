@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import QuoteTabs from './UI_components/quotelists';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { createTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +43,7 @@ const demoTheme = createTheme({
       palette: {
         background: {
           default: '#f7f6f6',
-          paper: '##fefdfc',
+          paper: '#fefdfc',
         },
       },
     },
@@ -100,13 +102,6 @@ function ConnectToShopsContent() {
   );
 }
 
-function MyConnectionsContent() {
-  return (
-    <Box sx={{ py: 4, textAlign: 'center' }}>
-      <Typography variant="h4">My Connections</Typography>
-    </Box>
-  );
-}
 
 function SubscriptionContent() {
   return (
@@ -142,6 +137,15 @@ function RequestPage() {
     </Box>
   );
 }
+function QuotesReceived() {
+  return (
+    <Box sx={{ py: 4, textAlign: 'center' }}>
+      <Typography variant="h4">Quotes</Typography>
+      <QuoteTabs />
+      <Typography>View and manage your quotes here.</Typography>
+    </Box>
+  );
+}
 
 // Content renderer based on the current route
 function DemoPageContent({ pathname }) {
@@ -159,14 +163,14 @@ function DemoPageContent({ pathname }) {
       return <MyPostsContent />;
     case '/connect-to-shops':
       return <ConnectToShopsContent />;
-    case '/my-connections':
-      return <MyConnectionsContent />;
     case '/subscription':
       return <SubscriptionContent />;
     case '/update-profile':
       return <UpdateProfileContent />;
     case '/notifications':
       return <NotificationsContent />;
+    case '/quotes':
+      return <QuotesReceived />
     case '/logout':
       return <Logout onLogout={handleLogout} />;
     case '/my-requests':
@@ -242,8 +246,8 @@ function DashboardLayoutNavigationLinks(props) {
         { segment: 'myposts', title: 'My Posts', icon: <ForumIcon /> },
         { segment: 'connect-to-shops', title: 'Connect to Shops', icon: <ShopIcon /> },
         { segment: 'my-requests', title: 'Requests', icon: <PendingActionsRoundedIcon /> },
-        { segment: 'my-connections', title: 'My Connections', icon: <GroupIcon /> },
         { segment: 'subscription', title: 'Subscription', icon: <SubscriptionsIcon /> },
+        { segment: 'quotes',title: 'quotes',icon: <ProductionQuantityLimitsIcon/>},
         { segment: 'update-profile', title: 'Update Profile', icon: <PersonIcon /> },
         { segment: 'notifications', title: 'Notifications', icon: <NotificationsIcon /> },
         { segment: 'logout', title: 'Logout', icon: <LogoutIcon /> },
