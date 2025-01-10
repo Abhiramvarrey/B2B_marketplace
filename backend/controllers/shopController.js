@@ -36,7 +36,7 @@ exports.searchShops = async (req, res) => {
                 return { ...shop.toObject(), connectionStatus }; // Add connection status to shop object
             })
     );
-
+    console.log("shops:found:",updatedShops);
     return res.status(200).json(updatedShops); // Send the updated shops data as response
     } catch (err) {
         console.error("Error searching for shops:", err);
