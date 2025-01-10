@@ -27,7 +27,7 @@ const createPost = async (req, res) => {
 
     // Check if items is provided and has data
     if (!items || items.length === 0) {
-      return res.status(200).json({ message: "Items are required" });
+      return res.status(500).json({ message: "Items are required" });
     }
     // Get userId and shopName from JWT token
     const { _id: userId, shopName } = req.user;
