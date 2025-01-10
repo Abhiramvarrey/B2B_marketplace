@@ -20,7 +20,7 @@ const PostDashboard = () => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/getmyposts?page=${page}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/getmyposts?page=${page}` ,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Use appropriate token handling

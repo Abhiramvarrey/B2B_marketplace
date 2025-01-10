@@ -13,7 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 const PostForm = () => {
-  const [items, setItems] = useState([{ name: "", quantity: "" }]);
+  const [items, setItems] = useState([{ name: ""}]);
   const [deadline, setDeadline] = useState("");
   const token = localStorage.getItem("token"); // Get JWT from local storage
   const theme = useTheme();
@@ -27,7 +27,7 @@ const PostForm = () => {
 
   // Function to add a new row for additional items
   const handleAddRow = () => {
-    setItems([...items, { name: "", quantity: "" }]);
+    setItems([...items, { name: ""}]);
   };
 
   // Function to remove an item row
@@ -49,12 +49,12 @@ const PostForm = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:5000/api/posts", data, {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/posts`, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Post created successfully:", response.data);
       // Reset form after submission
-      setItems([{ name: "", quantity: "" }]);
+      setItems([{ name: ""}]);
       setDeadline("");
     } catch (error) {
       console.error("Error creating post:", error.response?.data || error.message);
@@ -87,16 +87,6 @@ const PostForm = () => {
                   label="Item Name"
                   value={item.name}
                   onChange={(e) => handleChange(index, "name", e.target.value)}
-                  required
-                />
-              </Grid2>
-              <Grid2 item xs={12} sm={5}>
-                <TextField
-                  fullWidth
-                  label="Quantity"
-                  type="number"
-                  value={item.quantity}
-                  onChange={(e) => handleChange(index, "quantity", e.target.value)}
                   required
                 />
               </Grid2>

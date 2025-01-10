@@ -7,7 +7,6 @@ const postSchema = new mongoose.Schema(
     items: [
       {
         name: { type: String, required: true },
-        quantity: { type: Number, required: true },
       },
     ],
     deadline: { type: Date, required: true },

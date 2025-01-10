@@ -25,7 +25,7 @@ const ShopSearch = () => {
   const fetchShops = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/searchshop?query=${searchQuery}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/searchshop?query=${searchQuery}`,
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
       setShops(response.data);
@@ -52,8 +52,8 @@ const ShopSearch = () => {
   const handleConnection = async (shopId, action) => {
     try {
       const endpoint =
-        action === 'connect' ? `/api/connect/${shopId}` : `/api/withdraw/${shopId}`;
-      await axios.post(`http://localhost:5000${endpoint}`, {}, {
+        action === 'connect' ? `${process.env.REACT_APP_BACKEND_URL}/api/connect/${shopId}` : `${process.env.REACT_APP_BACKEND_URL}/api/withdraw/${shopId}`;
+      await axios.post(`${endpoint}`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       fetchShops(); // Refresh the list to update connection statuses

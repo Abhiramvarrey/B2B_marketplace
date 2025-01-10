@@ -19,7 +19,7 @@ const ConnectionRequests = () => {
   const fetchRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      const {data} = await axios.get('http://localhost:5000/api/connections/requests', {
+      const {data} = await axios.get( `${process.env.REACT_APP_BACKEND_URL}/api/connections/requests`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPendingRequests(data);
@@ -31,7 +31,7 @@ const ConnectionRequests = () => {
   const fetchconnections = async() =>{
     try {
         const token = localStorage.getItem('token');
-        const {data} = await axios.get('http://localhost:5000/api/connections/connected',{
+        const {data} = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/connections/connected`,{
         headers: { Authorization: `Bearer ${token}` },
       });
       // Separate requests into categories based on their status
@@ -44,7 +44,7 @@ const ConnectionRequests = () => {
   const handleAccept = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/connections/accept/${id}`, {}, {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/connections/accept/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchRequests();
@@ -57,7 +57,7 @@ const ConnectionRequests = () => {
   const handleReject = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/connections/reject/${id}`, {}, {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/connections/reject/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchRequests();

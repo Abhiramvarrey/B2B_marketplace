@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-const API_URL = 'http://localhost:5000/api/auth';
 
 export const authService = {
   // Register user
   async register(userData) {
     try {
-      const response = await axios.post(`${API_URL}/register`, userData);
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/register`, userData);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -16,7 +15,7 @@ export const authService = {
   // Login user
   async login(formData) {
     try {
-      const response = await axios.post(`${API_URL}/login`, formData);
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, formData);
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         return response;

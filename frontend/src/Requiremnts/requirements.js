@@ -26,12 +26,14 @@ const Requirements = () => {
     const fetchPosts = async () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-        const response = await axios.get("http://localhost:5000/api/connected-posts", {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/connected-posts`, {
           headers: {
             Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
           },
+
         });
         setPosts(response.data); // Update state with the fetched posts
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error.response?.data || error.message);
       }
@@ -39,6 +41,15 @@ const Requirements = () => {
     fetchPosts();
   }, []);
 
+  const formatDate = (isoDate) => {
+    const formattedDeadline = new Date(isoDate).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  console.log(formattedDeadline);
+  return formattedDeadline;
+  };
   const handleSendQuote = (post) => {
     setSelectedPost(post);
     const initialPrices = {};
@@ -74,7 +85,7 @@ const Requirements = () => {
         total,
       };
 
-      await axios.post("http://localhost:5000/api/send-quote", data, {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/send-quote`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -112,11 +123,11 @@ const Requirements = () => {
               <ul>
                 {post.items.map((item) => (
                   <li key={item.name}>
-                    {item.name} - {item.quantity} -{" "}
-                    {new Date(item.deadline).toLocaleDateString()}
+                    {item.name}
                   </li>
                 ))}
               </ul>
+              <Typography variant="h6">{formatDate(post.deadline)}</Typography>
               <Button
                 variant="contained"
                 color="primary"

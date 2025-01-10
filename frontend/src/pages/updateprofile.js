@@ -50,7 +50,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:5000/api/profile', {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('Profile data fetched successfully:', response.data); // Log the response to check the data
@@ -79,7 +79,7 @@ const Profile = () => {
     const token = localStorage.getItem('token');
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/profile/update',
+        `${process.env.REACT_APP_BACKEND_URL}/api/profile/update`,
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },

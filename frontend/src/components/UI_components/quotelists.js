@@ -20,9 +20,10 @@ const QuoteTabs = () => {
   const fetchMyQuotes = async () => {
     try {
       const token = localStorage.getItem('token');
-      const { data } = await axios.get('http://localhost:5000/api/getmyquotes', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/api/getmyquotes`, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setSentQuotes(data);
     } catch (error) {
       console.error(error.response?.data || error.message);
@@ -34,7 +35,7 @@ const QuoteTabs = () => {
     try {
       const token = localStorage.getItem('token');
       const { data } = await axios.get(
-        'http://localhost:5000/api/getreceivedquotes',
+        `${process.env.REACT_APP_BACKEND_URL}/api/getreceivedquotes`, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setReceivedQuotes(data);
@@ -48,7 +49,7 @@ const QuoteTabs = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:5000/api/acceptquote/${quoteId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/acceptquote/${quoteId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
