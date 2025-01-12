@@ -13,7 +13,7 @@ exports.searchShops = async (req, res) => {
     }).select('ownerName shopName shopLocation shopCategory _id'); // Return limited fields
 
     if (!shops || shops.length === 0) {
-        return res.status(404).json({ message: 'No shops found' });
+        return res.status(200).json({ message: 'No shops found' });
     }
 
     // Current user's ID from the token
@@ -36,10 +36,9 @@ exports.searchShops = async (req, res) => {
                 return { ...shop.toObject(), connectionStatus }; // Add connection status to shop object
             })
     );
-    console.log("shops:found:",updatedShops);
     return res.status(200).json(updatedShops); // Send the updated shops data as response
     } catch (err) {
         console.error("Error searching for shops:", err);
-        res.status(500).json({ message: 'Error searching for shops', error: err.message });
+        res.status(404).json({ message: 'Error searching for shops', error: err.message });
     }
 };
